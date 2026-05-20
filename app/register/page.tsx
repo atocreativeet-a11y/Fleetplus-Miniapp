@@ -11,13 +11,35 @@ export default function Register() {
     departureTime: ''
   });
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async () => {
-    console.log(form);
-    alert('Saved (connect backend next)');
+    try {
+      const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+
+      if (res.ok) {
+        alert('Saved to backend!');
+        setForm({
+          name: '',
+          phone: '',
+          homeLocation: '',
+          officeLocation: '',
+          arrivalTime: '',
+          departureTime: ''
+        });
+      } else {
+        alert('Error saving data');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Network error');
+    }
   };
 
   return (
@@ -26,9 +48,10 @@ export default function Register() {
 
       {/* Personal Info */}
       <section className="mb-6">
-      <input
+        <input
           name="name"
           placeholder="Full Name"
+          value={form.name}
           required
           onChange={handleChange}
           className="border p-3 w-full mb-3 rounded"
@@ -36,6 +59,7 @@ export default function Register() {
         <input
           name="phone"
           placeholder="Phone Number"
+          value={form.phone}
           required
           onChange={handleChange}
           className="border p-3 w-full mb-3 rounded"
@@ -44,9 +68,10 @@ export default function Register() {
 
       {/* Locations */}
       <section className="mb-6">
-       <label className="block mb-2 font-medium">My House Is Located at</label>
+        <label className="block mb-2 font-medium">My House Is Located at</label>
         <select
           name="homeLocation"
+          value={form.homeLocation}
           onChange={handleChange}
           className="border p-3 w-full mb-3 rounded"
         >
@@ -71,6 +96,7 @@ export default function Register() {
         <label className="block mb-2 font-medium">My Office Is Located at</label>
         <select
           name="officeLocation"
+          value={form.officeLocation}
           onChange={handleChange}
           className="border p-3 w-full mb-3 rounded"
         >
@@ -99,6 +125,7 @@ export default function Register() {
         <input
           name="arrivalTime"
           type="time"
+          value={form.arrivalTime}
           required
           onChange={handleChange}
           className="border p-3 w-full mb-3 rounded"
@@ -108,6 +135,7 @@ export default function Register() {
         <input
           name="departureTime"
           type="time"
+          value={form.departureTime}
           required
           onChange={handleChange}
           className="border p-3 w-full mb-3 rounded"
