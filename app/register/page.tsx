@@ -44,7 +44,7 @@ export default function Register() {
 
   return (
     <main className="min-h-screen p-6">
-      <h1 className="text-2xl font-bold mb-6">Register Commute</h1>
+      <h1 className="text-2xl font-bold mb-6">REGISTER COMMUTE</h1>
 
       {/* Personal Info */}
       <section className="mb-6">
