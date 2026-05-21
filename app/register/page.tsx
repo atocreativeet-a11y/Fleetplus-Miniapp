@@ -7,6 +7,7 @@ export default function Register() {
   const [form, setForm] = useState({
     name: '',
     phone: '',
+    workAt: '',
     homeLocation: '',
     officeLocation: '',
     arrivalTime: '',
@@ -18,26 +19,41 @@ export default function Register() {
   };
 
   const handleSubmit = async () => {
-    try {
-      const res = await fetch('/api/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      });
+  const missing: string[] = [];
 
-      const result = await res.json();
+  if (!form.name) missing.push('Full Name');
+  if (!form.phone) missing.push('Phone Number');
+  if (!form.workAt) missing.push('Work At');
+  if (!form.homeLocation) missing.push('Home Location');
+  if (!form.officeLocation) missing.push('Office Location');
+  if (!form.arrivalTime) missing.push('Arrival Time');
+  if (!form.departureTime) missing.push('Departure Time');
 
-      if (res.ok) {
-        // Redirect to match page with server response
-        router.push(`/match?status=${result.status}&matchId=${result.matchId || ''}`);
-      } else {
-        alert(result.message || 'Error saving data');
-      }
-    } catch (err) {
-      console.error(err);
-      alert('Network error');
+  if (missing.length > 0) {
+    alert(`Please fill in the following fields:\n- ${missing.join('\n- ')}`);
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(form),
+    });
+
+    const result = await res.json();
+
+    if (res.ok) {
+      router.push(`/match?status=${result.status}`);
+    } else {
+      alert(result.message || 'Error saving data');
     }
-  };
+  } catch (err) {
+    console.error(err);
+    alert('Network error');
+  }
+};
+
 
   return (
     <main className="min-h-screen p-6">
@@ -61,6 +77,43 @@ export default function Register() {
           onChange={handleChange}
           className="border p-3 w-full mb-3 rounded"
         />
+
+        <label className="block mb-2 font-medium">I Work At</label>
+        <select
+          name="workAt"
+          value={form.workAt}
+          required
+          onChange={handleChange}
+          className="border p-3 w-full mb-3 rounded"
+        >
+          <option value="">Select...</option>
+          <option value="Abay Bank">Abay Bank</option>
+          <option value="Addis Bank">Addis Bank</option>
+          <option value="Ahadu Bank">Ahadu Bank</option>
+          <option value="Amhara Bank">Amhara Bank</option>
+          <option value="Anbesa Bank">Anbesa Bank</option>
+          <option value="Awash Bank">Awash Bank</option>
+          <option value="Bank of Abyssinia">Bank of Abyssinia</option>
+          <option value="Berhan Bank">Berhan Bank</option>
+          <option value="Bunna Bank">Bunna Bank</option>
+          <option value="Commercial Bank of Ethiopia">Commercial Bank of Ethiopia</option>
+          <option value="Cooperative Bank of Oromia">Cooperative Bank of Oromia</option>
+          <option value="Dashen Bank">Dashen Bank</option>
+          <option value="Enat Bank">Enat Bank</option>
+          <option value="Global Bank Ethiopia">Global Bank Ethiopia</option>
+          <option value="Gadaa Bank">Gadaa Bank</option>
+          <option value="Hibret Bank">Hibret Bank</option>
+          <option value="Hijra Bank">Hijra Bank</option>
+          <option value="Oromia Bank">Oromia Bank</option>
+          <option value="Nib International Bank">Nib International Bank</option>
+          <option value="Siinqee Bank">Siinqee Bank</option>
+          <option value="Shabelle Bank">Shabelle Bank</option>
+          <option value="Tsehay Bank">Tsehay Bank</option>
+          <option value="Tsedey Bank">Tsedey Bank</option>
+          <option value="ZamZam Bank">ZamZam Bank</option>
+          <option value="Wegagen Bank">Wegagen Bank</option>
+          <option value="Zemen Bank">Zemen Bank</option>
+        </select>
       </section>
 
       {/* Locations */}
@@ -69,6 +122,7 @@ export default function Register() {
         <select
           name="homeLocation"
           value={form.homeLocation}
+          required
           onChange={handleChange}
           className="border p-3 w-full mb-3 rounded"
         >
@@ -94,6 +148,7 @@ export default function Register() {
         <select
           name="officeLocation"
           value={form.officeLocation}
+          required
           onChange={handleChange}
           className="border p-3 w-full mb-3 rounded"
         >

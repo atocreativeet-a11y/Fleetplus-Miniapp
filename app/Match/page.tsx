@@ -30,7 +30,7 @@ export default function Match() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
+    <main className="min-h-screen flex items-center justify-center p-6">
       {status === 'match' ? (
         <div className="w-full max-w-md space-y-6 animate-fadeIn">
           <h1 className="text-3xl font-bold text-green-600 text-center">🎉 Matches Found!</h1>
