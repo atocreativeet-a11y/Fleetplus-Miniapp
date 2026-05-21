@@ -1,7 +1,9 @@
 'use client';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Register() {
+  const router = useRouter();
   const [form, setForm] = useState({
     name: '',
     phone: '',
@@ -24,15 +26,10 @@ export default function Register() {
       });
 
       if (res.ok) {
-        alert('Saved to backend!');
-        setForm({
-          name: '',
-          phone: '',
-          homeLocation: '',
-          officeLocation: '',
-          arrivalTime: '',
-          departureTime: ''
-        });
+        // Redirect to matching page with commute details
+        router.push(
+          `/match?homeLocation=${form.homeLocation}&officeLocation=${form.officeLocation}&arrivalTime=${form.arrivalTime}&departureTime=${form.departureTime}`
+        );
       } else {
         alert('Error saving data');
       }
@@ -146,7 +143,7 @@ export default function Register() {
         onClick={handleSubmit}
         className="bg-green-600 text-white w-full py-3 rounded-xl font-semibold"
       >
-        Save
+        Submit
       </button>
     </main>
   );
