@@ -25,13 +25,13 @@ export default function Register() {
         body: JSON.stringify(form),
       });
 
+      const result = await res.json();
+
       if (res.ok) {
-        // Redirect to matching page with commute details
-        router.push(
-          `/match?homeLocation=${form.homeLocation}&officeLocation=${form.officeLocation}&arrivalTime=${form.arrivalTime}&departureTime=${form.departureTime}`
-        );
+        // Redirect to match page with server response
+        router.push(`/match?status=${result.status}&matchId=${result.matchId || ''}`);
       } else {
-        alert('Error saving data');
+        alert(result.message || 'Error saving data');
       }
     } catch (err) {
       console.error(err);
