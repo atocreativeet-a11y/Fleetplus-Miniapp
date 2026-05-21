@@ -1,17 +1,16 @@
-// app/api/register/route.ts
 import { NextResponse } from 'next/server';
 
-// Fake in-memory database
 let commuters: any[] = [];
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const { name, phone, homeLocation, officeLocation, arrivalTime, departureTime } = body;
+  const { name, homeLocation, officeLocation, arrivalTime, departureTime, telegramHandle, profilePic } = body;
 
   const newEntry = {
     id: Date.now(),
     name,
-    phone,
+    telegramHandle,   // store Telegram username instead of phone
+    profilePic,       // store profile picture URL
     homeLocation,
     officeLocation,
     arrivalTime,
@@ -19,8 +18,8 @@ export async function POST(req: Request) {
   };
   commuters.push(newEntry);
 
-  // Try to find a match
-  const match = commuters.find(
+  // Find all matches
+  const matches = commuters.filter(
     (c) =>
       c.id !== newEntry.id &&
       c.homeLocation === homeLocation &&
@@ -29,12 +28,11 @@ export async function POST(req: Request) {
       c.departureTime === departureTime
   );
 
-  if (match) {
+  if (matches.length > 0) {
     return NextResponse.json({
       status: 'match',
-      matchId: match.id,
-      message: 'Match found!',
-      match,
+      matches,
+      message: `${matches.length} people found on your route!`,
     });
   } else {
     return NextResponse.json({
